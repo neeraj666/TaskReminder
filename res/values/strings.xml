@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Task Reminder</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="no_reminders">No reminders yet</string>
+    <string name="title_activity_reminder_edit">Task Reminder Edit</string>
+    <string name="title">Title</string>
+    <string name="body">Body</string>
+    <string name="date">Reminder date</string>
+    <string name="time">Reminder time</string>
+    <string name="confirm">Save</string>
+    <string name="menu_insert">Add reminder</string>
+    <string name="menu_delete">Delete reminder</string>
+    <string name="task_saved_message">Saving task</string>
+    <string name="notify_new_task_message">New task</string>
+    <string name="notifiy_new_task_title">New task title</string>
+    
+
+</resources>
