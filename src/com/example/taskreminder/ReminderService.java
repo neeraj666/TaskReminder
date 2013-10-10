@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 
 public class ReminderService extends WakeReminderIntentService {
 	
@@ -24,20 +26,32 @@ public class ReminderService extends WakeReminderIntentService {
 			(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		Intent notificationIntent = new Intent(this, ReminderEditActivity.class);
 		notificationIntent.putExtra(RemindersDbAdapter.KEY_ROWID, rowId);
+		Intent notificationSnoozeIntent = new Intent(this, ReminderEditActivity.class);
+		notificationSnoozeIntent.putExtra(RemindersDbAdapter.KEY_ROWID, rowId);
+		notificationSnoozeIntent.putExtra("Action","snooze");
 		
-		PendingIntent pi = PendingIntent.getActivity
-			(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		stackBuilder.addParentStack(ReminderEditActivity.class);
+		stackBuilder.addNextIntent(notificationIntent);
+		stackBuilder.addNextIntent(notificationSnoozeIntent);
 		
-		Notification note = new Notification(android.R.drawable.stat_sys_warning,
-				getString(R.string.notify_new_task_message), System.currentTimeMillis());
-		note.setLatestEventInfo(this, getString(R.string.notifiy_new_task_title)
-				, getString(R.string.notify_new_task_message), pi);
+		PendingIntent pi = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		note.defaults |= Notification.DEFAULT_SOUND;
-		note.flags |= Notification.FLAG_AUTO_CANCEL;
+		//PendingIntent pi = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		PendingIntent piSnooze = PendingIntent.getActivity(this, 0, notificationSnoozeIntent, 0);
+		
+		NotificationCompat.Builder mBuilder = new
+			NotificationCompat.Builder(this)
+			.setSmallIcon(R.drawable.ic_launcher)
+			.setContentTitle(getString(R.string.notifiy_new_task_title))
+			.setContentText(getString(R.string.notify_new_task_message))
+			.setLights(Notification.DEFAULT_LIGHTS, 100, 100)
+			.setAutoCancel(true)
+			.setContentIntent(pi)
+			.addAction(R.drawable.ic_snooze, "Snooze", piSnooze);
 		
 		int id = (int)((long)rowId);
-		mgr.notify(id, note);
+		mgr.notify(id, mBuilder.build());
 	}
 
 }
