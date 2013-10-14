@@ -45,7 +45,7 @@ public class ReminderService extends WakeReminderIntentService {
 			.setSmallIcon(R.drawable.ic_launcher)
 			.setContentTitle(getString(R.string.notifiy_new_task_title))
 			.setContentText(getString(R.string.notify_new_task_message))
-			.setLights(Notification.DEFAULT_LIGHTS, 100, 100)
+			.setLights(Notification.DEFAULT_LIGHTS, 300, 100)
 			.setAutoCancel(true)
 			.setContentIntent(pi)
 			.addAction(R.drawable.ic_snooze, "Snooze", piSnooze);

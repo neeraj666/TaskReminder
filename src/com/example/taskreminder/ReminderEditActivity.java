@@ -9,10 +9,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,7 +37,7 @@ public class ReminderEditActivity extends Activity {
 	private Long mRowId;
 	public static final String DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DATE_TIME_FORMAT = "dd/MM/yyyy kk/mm";
-	public static final String TIME_FORMAT = "kk/mm";
+	public static final String TIME_FORMAT = "kk:mm";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +63,8 @@ public class ReminderEditActivity extends Activity {
 			populateFields();
 		} else {
 			tNow.setToNow();
-			SimpleDateFormat dateFormat = new
-				SimpleDateFormat(DATE_FORMAT);
-			SimpleDateFormat timeFormat = new
-				SimpleDateFormat(TIME_FORMAT);
-		mDateButton.setText(dateFormat.format(now.getTime()));
-		mTimeButton.setText(timeFormat.format(now.getTime()));
+			updateDateButtonText();
+			updateTimeButtonText();
 		} 
 		registerButtonListenerAndSetDefaultText();
 		
@@ -106,8 +105,6 @@ public class ReminderEditActivity extends Activity {
 			String reminderDateTime = reminder.getString
 				(reminder.getColumnIndex
 					(RemindersDbAdapter.KEY_DATE_TIME));
-			SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-			SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
 			SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
 			Date date = null;
 			try {
@@ -117,10 +114,34 @@ public class ReminderEditActivity extends Activity {
 				e.printStackTrace();
 			}
 			now.setTime(date);
-			mDateButton.setText(dateFormat.format(date));
-			mTimeButton.setText(timeFormat.format(date));
+			updateDateButtonText();
+			updateTimeButtonText();
 			
+		} else {
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			String defaultTitleKey = getString(R.string.pref_task_title_key);
+			String defaultTimeKey = getString(R.string.pref_default_time_from_now_key);
+			String defaultTitle = prefs.getString(defaultTitleKey, "");
+			String defaultTime = prefs.getString(defaultTimeKey, "");
+			if("".equals(defaultTime) == false)
+				mTitleText.setText(defaultTitle);
+			if("".equals(defaultTime) == false)
+				now.add(Calendar.MINUTE, Integer.parseInt(defaultTime));
+			updateDateButtonText();
+			updateTimeButtonText();
 		}
+	}
+	
+	public void updateDateButtonText() {
+		SimpleDateFormat dateFormat = new
+			SimpleDateFormat(DATE_FORMAT);
+		mDateButton.setText(dateFormat.format(now.getTime()));		
+	}
+	
+	public void updateTimeButtonText() {
+		SimpleDateFormat timeFormat = new
+			SimpleDateFormat(TIME_FORMAT);
+		mTimeButton.setText(timeFormat.format(now.getTime()));
 	}
 	
 	@Override
@@ -134,6 +155,19 @@ public class ReminderEditActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.reminder_edit, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onMenuItemSelected (int featureId, MenuItem item) {
+		switch(item.getItemId()) {
+		case R.id.action_undo:
+			//Toast.makeText(getApplicationContext(), "Not handled yet", Toast.LENGTH_SHORT).show();
+			setResult(Activity.RESULT_CANCELED);
+			finish();
+			return true;
+		}
+		
+		return super.onMenuItemSelected(featureId, item);
 	}
 	
 	public void registerButtonListenerAndSetDefaultText() {
@@ -191,7 +225,7 @@ public class ReminderEditActivity extends Activity {
 			FragmentTransaction ft = getFragmentManager().beginTransaction(); //get the fragment
 			tFrag = TimeDialogFragment.newInstance(this, new TimeDialogFragmentListner(){
 	    		public void updateChangedTime(int hour, int minute){
-	    			mTimeButton.setText(String.valueOf(hour)+"/"+String.valueOf(minute));
+	    			mTimeButton.setText(String.valueOf(hour)+":"+String.valueOf(minute));
 	    			now.set(Calendar.HOUR, hour);
 	    			now.set(Calendar.MINUTE, minute);	    				    		}
 	    	}, now);

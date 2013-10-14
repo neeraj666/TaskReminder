@@ -80,8 +80,15 @@ public class ReminderListActivity extends ListActivity {
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.menu_insert:
+			Toast.makeText(getApplicationContext(), "Not handled yet", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.action_add:
 			Toast.makeText(getApplicationContext(), "Creating new task", Toast.LENGTH_SHORT).show();
 			createReminder();
+			return true;
+		case R.id.menu_settings:
+			Intent i = new Intent(this, TaskPreferences.class);
+			startActivity(i);
 			return true;
 		}
 		return super.onMenuItemSelected(featureId, item);
