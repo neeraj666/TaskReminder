@@ -26,19 +26,18 @@ public class ReminderService extends WakeReminderIntentService {
 			(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		Intent notificationIntent = new Intent(this, ReminderEditActivity.class);
 		notificationIntent.putExtra(RemindersDbAdapter.KEY_ROWID, rowId);
-		Intent notificationSnoozeIntent = new Intent(this, ReminderEditActivity.class);
+		Intent notificationSnoozeIntent = new Intent(this, ReminderSnoozeService.class);
 		notificationSnoozeIntent.putExtra(RemindersDbAdapter.KEY_ROWID, rowId);
 		notificationSnoozeIntent.putExtra("Action","snooze");
 		
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addParentStack(ReminderEditActivity.class);
 		stackBuilder.addNextIntent(notificationIntent);
-		stackBuilder.addNextIntent(notificationSnoozeIntent);
-		
+		//stackBuilder.addNextIntent(notificationSnoozeIntent);
 		PendingIntent pi = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		//PendingIntent pi = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-		PendingIntent piSnooze = PendingIntent.getActivity(this, 0, notificationSnoozeIntent, 0);
+		PendingIntent piSnooze = PendingIntent.getService(this, 0, notificationSnoozeIntent, 0);
 		
 		NotificationCompat.Builder mBuilder = new
 			NotificationCompat.Builder(this)

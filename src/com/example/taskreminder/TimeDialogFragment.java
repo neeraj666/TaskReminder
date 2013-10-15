@@ -25,7 +25,7 @@ public class TimeDialogFragment extends DialogFragment {
 		TimeDialogFragment dialog = new TimeDialogFragment();
 		mContext = context;
 		mListener = listener;
-		mHour = now.get(Calendar.HOUR);
+		mHour = now.get(Calendar.HOUR_OF_DAY);
 		mMinute = now.get(Calendar.MINUTE);
 		am_pm = true;
 		Bundle args = new Bundle();

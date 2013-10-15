@@ -17,7 +17,7 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_delete">Delete reminder</string>
     <string name="task_saved_message">Saving task</string>
-    <string name="notify_new_task_message">New task</string>
+    <string name="notify_new_task_message">New reminder</string>
     <string name="notifiy_new_task_title">New task title</string>
     <string name="pref_category_task_defaults_key">task_default_category</string>
     <string name="pref_category_task_defaults_title">Task Title Default</string>

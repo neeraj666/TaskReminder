@@ -226,7 +226,7 @@ public class ReminderEditActivity extends Activity {
 			tFrag = TimeDialogFragment.newInstance(this, new TimeDialogFragmentListner(){
 	    		public void updateChangedTime(int hour, int minute){
 	    			mTimeButton.setText(String.valueOf(hour)+":"+String.valueOf(minute));
-	    			now.set(Calendar.HOUR, hour);
+	    			now.set(Calendar.HOUR_OF_DAY, hour);
 	    			now.set(Calendar.MINUTE, minute);	    				    		}
 	    	}, now);
 	    	
